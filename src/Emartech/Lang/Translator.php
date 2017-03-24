@@ -6,24 +6,6 @@ use Psr\Log\LoggerInterface;
 
 class Translator
 {
-    private $translations;
-    private $logger;
-    private static $translator;
-
-    public static function createInstance($lang, Fetcher $fetcher, LoggerInterface $logger): Translator
-    {
-        if (self::$translator === null) {
-            self::$translator = new Translator($fetcher->getTranslations($lang), $logger);
-        }
-
-        return self::$translator;
-    }
-
-    public static function getInstance(): Translator
-    {
-        return self::$translator;
-    }
-
     public function __construct(array $translations, LoggerInterface $logger)
     {
         $this->translations = $translations;

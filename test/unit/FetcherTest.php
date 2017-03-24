@@ -22,7 +22,7 @@ class FetcherTest extends BaseTestCase
     /**
      * @var Fetcher
      */
-    private $subject;
+    private $fetcher;
 
 
     public function setUp()
@@ -30,9 +30,19 @@ class FetcherTest extends BaseTestCase
         parent::setUp();
         $this->loggerMock = $this->mock(LoggerInterface::class);
         $this->clientMock = $this->mock(HttpClient::class);
-        $this->subject = new Fetcher('', $this->clientMock, $this->loggerMock);
+        $this->fetcher = new Fetcher('', $this->clientMock, $this->loggerMock);
     }
 
+
+    /**
+     * @test
+     */
+    public function createTranslator_LangGiven_ProperTranslatorReturned()
+    {
+        $this->expectTranslationsReturned('en');
+        $translator = $this->fetcher->createTranslator('en');
+        $this->assertEquals('translation one en', $translator->translate('translation 1'));
+    }
 
     /**
      * @test
@@ -40,7 +50,7 @@ class FetcherTest extends BaseTestCase
     public function getTranslations_NoTranslationsAvailable_EmptyArrayReturned()
     {
         $this->expectHttpRequestToFail();
-        $this->assertEquals([], $this->subject->getTranslations('en'));
+        $this->assertEquals([], $this->fetcher->getTranslations('en'));
     }
 
 
@@ -51,7 +61,7 @@ class FetcherTest extends BaseTestCase
     {
         $this->expectHttpRequestToFail();
         $this->expectRequestFailureToBeLogged();
-        $this->subject->getTranslations('en');
+        $this->fetcher->getTranslations('en');
     }
 
 
@@ -61,8 +71,8 @@ class FetcherTest extends BaseTestCase
     public function getTranslations_NoTranslationsAvailable_TryDownloadOnlyOnce()
     {
         $this->expectHttpRequestToFail();
-        $this->subject->getTranslations('en');
-        $this->subject->getTranslations('en');
+        $this->fetcher->getTranslations('en');
+        $this->fetcher->getTranslations('en');
     }
 
 
@@ -71,13 +81,13 @@ class FetcherTest extends BaseTestCase
      */
     public function getTranslations_TranslationsFound_ReturnProperTranslationsArray()
     {
-        $this->expectTranslationsReturned();
+        $this->expectTranslationsReturned('en');
         $expectedTranslationsArray = [
-                'translation 1' => 'translation one',
-                'translation 2' => 'translation two'
+                'translation 1' => 'translation one en',
+                'translation 2' => 'translation two en'
         ];
 
-        $this->assertEquals($expectedTranslationsArray, $this->subject->getTranslations('en'));
+        $this->assertEquals($expectedTranslationsArray, $this->fetcher->getTranslations('en'));
     }
 
 
@@ -98,9 +108,9 @@ class FetcherTest extends BaseTestCase
     }
 
 
-    public function expectTranslationsReturned()
+    public function expectTranslationsReturned($lang)
     {
-        $translationResponseBody = '{"translation 1":"translation one","translation 2":"translation two"}';
+        $translationResponseBody = '{"translation 1":"translation one '.$lang.'","translation 2":"translation two '.$lang.'"}';
         $response = $this->mock(ResponseInterface::class);
         $response->expects($this->once())->method('getBody')->willReturn($translationResponseBody);
 
