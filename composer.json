@@ -4,13 +4,10 @@
   "require": {
     "php": "~7.1",
     "guzzlehttp/guzzle": "*",
-    "monolog/monolog": "*",
-    "emartech/php-json-response-helper": "dev-master"
+    "psr/log": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "*",
-    "symfony/debug": "*",
-    "heroku/heroku-buildpack-php": "*",
     "emartech/php-test-helpers": "*"
   },
   "autoload": {
