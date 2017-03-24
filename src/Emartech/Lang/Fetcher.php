@@ -37,7 +37,7 @@ class Fetcher
     }
 
 
-    public function getTranslations(string $lang) : array
+    public function getTranslations(string $lang): array
     {
         if (!array_key_exists($lang, $this->translations)) {
             $this->fetchTranslations($lang);
