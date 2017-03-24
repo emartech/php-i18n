@@ -16,6 +16,8 @@ namespace Emartech\Lang
 
     class Fetcher
     {
+        const GLOBAL_KEY = 'translator';
+
         /**
          * @var string
          */
@@ -46,7 +48,9 @@ namespace Emartech\Lang
 
         public function initialize(string $lang)
         {
-            $GLOBALS['translator'] = $this->createTranslator($lang);
+            if (!isset($GLOBALS[self::GLOBAL_KEY])) {
+                $GLOBALS[self::GLOBAL_KEY] = $this->createTranslator($lang);
+            }
         }
 
         public function createTranslator(string $lang): Translator
