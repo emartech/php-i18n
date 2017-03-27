@@ -1,6 +1,6 @@
 <?php
 
-use Emartech\Lang\Fetcher;
+use Emartech\I18n\Translation\Fetcher;
 use Emartech\TestHelper\BaseTestCase;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Http\Message\ResponseInterface;

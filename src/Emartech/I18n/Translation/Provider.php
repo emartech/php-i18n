@@ -2,7 +2,7 @@
 
 namespace {
 
-    use Emartech\Lang\Provider;
+    use Emartech\I18n\Translation\Provider;
 
     if (!function_exists('t')) {
         function t(string $text): string
@@ -12,7 +12,7 @@ namespace {
     }
 }
 
-namespace Emartech\Lang {
+namespace Emartech\I18n\Translation {
 
     use GuzzleHttp\Client;
     use Psr\Log\LoggerInterface;

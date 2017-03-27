@@ -1,6 +1,6 @@
 <?php
 
-use Emartech\Lang\Translator;
+use Emartech\I18n\Translation\Translator;
 use Psr\Log\LoggerInterface;
 use Emartech\TestHelper\BaseTestCase;
 
@@ -15,6 +15,7 @@ class TranslatorTest extends BaseTestCase
      * @var Translator
      */
     private $translator;
+
 
     public function setUp()
     {

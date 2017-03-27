@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Emartech\Lang;
+namespace Emartech\I18n\Translation;
 
 use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client as HttpClient;
