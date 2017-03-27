@@ -3,16 +3,16 @@
 
 namespace Emartech\I18n\Translation;
 
+use Exception;
 use Psr\Log\LoggerInterface;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\Exception\RequestException;
 
 class Fetcher
 {
     /**
-     * @var string
+     * @var array
      */
-    private $url;
+    private $endPointUrls;
 
     /**
      * @var HttpClient
@@ -30,9 +30,9 @@ class Fetcher
     private $translations = [];
 
 
-    public function __construct(string $url, HttpClient $client, LoggerInterface $logger)
+    public function __construct(array $url, HttpClient $client, LoggerInterface $logger)
     {
-        $this->url = $url;
+        $this->endPointUrls = $url;
         $this->client = $client;
         $this->logger = $logger;
     }
@@ -40,33 +40,40 @@ class Fetcher
     public function getTranslations(string $lang): array
     {
         if (!array_key_exists($lang, $this->translations)) {
-            $this->fetchTranslations($lang);
+            $this->translations[$lang] = [];
+            foreach ($this->endPointUrls as $url) {
+                $this->translations[$lang] = array_merge($this->translations[$lang], $this->collectTranslations($url, $lang));
+            }
         }
 
         return $this->translations[$lang];
     }
 
-    private function fetchTranslations(string $lang)
+    private function collectTranslations(string $url, string $lang): array
     {
-        $json = null;
-
         try {
-            $response = $this->client->request('GET', $this->url, ['query' => ['lang' => $lang]]);
-
-            $json = (string)$response->getBody();
-            unset($response);
-        } catch (RequestException $e) {
+            return $this->process($this->fetchTranslations($url, $lang));
+        } catch (Exception $e) {
             $this->logger->error($e->getMessage());
+            return [];
         }
+    }
 
-        $translationsForLang = [];
-        if ($json) {
-            $decoded = json_decode($json, true);
-            if (is_array($decoded)) {
-                $translationsForLang = $decoded;
-            }
+    private function fetchTranslations(string $url, string $lang): string
+    {
+        $result = (string)$this->client->request('GET', $url, ['query' => ['lang' => $lang]])->getBody();
+        if (!$result) {
+            throw new Exception('Response was empty');
         }
+        return $result;
+    }
 
-        $this->translations[$lang] = $translationsForLang;
+    private function process($json): array
+    {
+        $result = json_decode($json, true);
+        if (!is_array($result)) {
+            throw new Exception('Invalid response');
+        }
+        return $result;
     }
 }

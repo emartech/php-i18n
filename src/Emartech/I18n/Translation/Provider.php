@@ -24,14 +24,14 @@ namespace Emartech\I18n\Translation {
          */
         private static $translator;
 
-        public static function initialize(string $endpointUrl, string $lang, LoggerInterface $logger)
+        public static function initialize(array $endpointUrls, string $lang, LoggerInterface $logger)
         {
             if (self::$translator) {
                 $logger->debug("Translator is already initialized with language {$lang}");
                 return;
             }
 
-            self::$translator = self::createTranslator($endpointUrl, $lang, $logger);
+            self::$translator = self::createTranslator($endpointUrls, $lang, $logger);
         }
 
         public static function getTranslator(): Translator
@@ -43,9 +43,9 @@ namespace Emartech\I18n\Translation {
             return self::$translator;
         }
 
-        private static function createTranslator(string $endpointUrl, string $lang, LoggerInterface $logger): Translator
+        private static function createTranslator(array $endpointUrls, string $lang, LoggerInterface $logger): Translator
         {
-            return new Translator((new Fetcher($endpointUrl, new Client(), $logger))->getTranslations($lang), $logger);
+            return new Translator((new Fetcher($endpointUrls, new Client(), $logger))->getTranslations($lang), $logger);
         }
     }
 }

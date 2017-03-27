@@ -30,7 +30,19 @@ class FetcherTest extends BaseTestCase
         parent::setUp();
         $this->loggerMock = $this->mock(LoggerInterface::class);
         $this->clientMock = $this->mock(HttpClient::class);
-        $this->fetcher = new Fetcher('', $this->clientMock, $this->loggerMock);
+        $this->fetcher = new Fetcher([''], $this->clientMock, $this->loggerMock);
+    }
+
+    /**
+     * @test
+     */
+    public function getTranslations_MultipleUrlsPassed_BothLoaded()
+    {
+        $this->clientMock->expects($this->at(0))->method('request')->willReturn($this->mockResponse('{"trans 1": "ford 1"}'));
+        $this->clientMock->expects($this->at(1))->method('request')->willReturn($this->mockResponse('{"trans 2": "ford 2"}'));
+
+        $fetcher = new Fetcher(['url1', 'url2'], $this->clientMock, $this->loggerMock);
+        $this->assertEquals(['trans 1' => 'ford 1', 'trans 2' => 'ford 2'], $fetcher->getTranslations('en'));
     }
 
     /**
@@ -94,12 +106,16 @@ class FetcherTest extends BaseTestCase
     public function expectTranslationsReturned($lang)
     {
         $translationResponseBody = '{"translation 1":"translation one '.$lang.'","translation 2":"translation two '.$lang.'"}';
-        $response = $this->mock(ResponseInterface::class);
-        $response->expects($this->once())->method('getBody')->willReturn($translationResponseBody);
-
         $this->clientMock
             ->expects($this->once())
             ->method('request')
-            ->willReturn($response);
+            ->willReturn($this->mockResponse($translationResponseBody));
+    }
+
+    private function mockResponse(string $translationResponseBody): PHPUnit_Framework_MockObject_MockObject
+    {
+        $response = $this->mock(ResponseInterface::class);
+        $response->expects($this->once())->method('getBody')->willReturn($translationResponseBody);
+        return $response;
     }
 }
