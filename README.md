@@ -1,3 +1,5 @@
+[ ![Codeship Status for emartech/php-i18n](https://app.codeship.com/projects/27708760-f2b7-0134-aeff-123376db6b99/status?branch=master)](https://app.codeship.com/projects/209769)
+
 # php-i18n
 
 Install dependencies with docker: 
