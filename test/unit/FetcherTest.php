@@ -33,17 +33,6 @@ class FetcherTest extends BaseTestCase
         $this->fetcher = new Fetcher('', $this->clientMock, $this->loggerMock);
     }
 
-
-    /**
-     * @test
-     */
-    public function createTranslator_LangGiven_ProperTranslatorReturned()
-    {
-        $this->expectTranslationsReturned('en');
-        $translator = $this->fetcher->createTranslator('en');
-        $this->assertEquals('translation one en', $translator->translate('translation 1'));
-    }
-
     /**
      * @test
      */
@@ -52,7 +41,6 @@ class FetcherTest extends BaseTestCase
         $this->expectHttpRequestToFail();
         $this->assertEquals([], $this->fetcher->getTranslations('en'));
     }
-
 
     /**
      * @test
@@ -64,7 +52,6 @@ class FetcherTest extends BaseTestCase
         $this->fetcher->getTranslations('en');
     }
 
-
     /**
      * @test
      */
@@ -74,7 +61,6 @@ class FetcherTest extends BaseTestCase
         $this->fetcher->getTranslations('en');
         $this->fetcher->getTranslations('en');
     }
-
 
     /**
      * @test
@@ -90,7 +76,6 @@ class FetcherTest extends BaseTestCase
         $this->assertEquals($expectedTranslationsArray, $this->fetcher->getTranslations('en'));
     }
 
-
     private function expectHttpRequestToFail()
     {
         /** @var RequestException|PHPUnit_Framework_MockObject_MockObject $exception */
@@ -101,12 +86,10 @@ class FetcherTest extends BaseTestCase
             ->will($this->throwException($exception));
     }
 
-
     private function expectRequestFailureToBeLogged()
     {
         $this->loggerMock->expects($this->once())->method('error');
     }
-
 
     public function expectTranslationsReturned($lang)
     {
