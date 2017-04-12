@@ -19,7 +19,7 @@ class Translator
         if (array_key_exists($text, $this->translations)) {
             $ret = $this->translations[$text];
         } else {
-            $this->logger->info("Missing translation for text: [ $text ]");
+            $this->logger->debug("Missing translation for text: [ $text ]");
         }
 
         return $ret;

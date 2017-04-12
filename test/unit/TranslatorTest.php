@@ -46,7 +46,7 @@ class TranslatorTest extends BaseTestCase
      */
     public function translate_TranslationsAvailableButNotTranslated_MissingTranslationLogged()
     {
-        $this->loggerMock->expects($this->once())->method('info');
+        $this->loggerMock->expects($this->once())->method('debug');
         $this->translator->translate('test');
     }
 
