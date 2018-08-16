@@ -1,6 +1,7 @@
 {
   "prefer-stable" : true,
   "name": "emartech/php-i18n",
+  "license": "MIT",
   "require": {
     "php": "~7.1",
     "guzzlehttp/guzzle": "*",
